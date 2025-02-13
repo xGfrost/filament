@@ -8,5 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Barang extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
+
+    public function detail()
+    {
+        return $this->hasMany(DetailFakturModel::class);
+    }
 }
