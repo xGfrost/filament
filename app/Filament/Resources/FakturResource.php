@@ -8,6 +8,7 @@ use App\Models\Faktur;
 use App\Models\FakturModel;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -22,6 +23,8 @@ class FakturResource extends Resource
 {
     protected static ?string $model = FakturModel::class;
 
+    protected static ?string $navigationGroup = 'Kelola';
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
@@ -32,7 +35,24 @@ class FakturResource extends Resource
                 DatePicker::make('tanggal_faktur'),
                 TextInput::make('code_customer'),
                 Select::make('customer_id')
-                ->relationship('customer', 'nama_customer'),
+                    ->relationship('customer', 'nama_customer'),
+                Repeater::make('detail')
+                    ->relationship()
+                    ->schema([
+                        Select::make('barang_id')
+                            ->relationship('barang', 'nama_barang'),
+                        TextInput::make('diskon')
+                            ->numeric(),
+                        TextInput::make('nama_barang'),
+                        TextInput::make('harga')
+                            ->numeric(),
+                        TextInput::make('subtotal')
+                            ->numeric(),
+                        TextInput::make('qty')
+                            ->numeric(),
+                        TextInput::make('hasil_qty')
+                            ->numeric(),
+                    ]),
                 TextInput::make('ket_faktur'),
                 TextInput::make('total'),
                 TextInput::make('nominal_charge'),
@@ -48,7 +68,7 @@ class FakturResource extends Resource
                 TextColumn::make('kode_faktur'),
                 TextColumn::make('tanggal_faktur'),
                 TextColumn::make('kode_customer'),
-                TextColumn::make('customer_id'),
+                TextColumn::make('customer.nama_customer'),
                 TextColumn::make('ket_faktur'),
                 TextColumn::make('total'),
                 TextColumn::make('nominal_charge'),
